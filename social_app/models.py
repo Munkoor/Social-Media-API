@@ -6,7 +6,7 @@ from django.db import models
 from django.utils.text import slugify
 
 
-def image_file_path(instance, filename):
+def image_file_path(instance, filename: str) -> str:
     _, extension = os.path.splitext(filename)
     return os.path.join(
         "uploads/images/",
