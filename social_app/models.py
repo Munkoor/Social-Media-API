@@ -23,7 +23,7 @@ class UserProfile(models.Model):
                               on_delete=models.CASCADE)
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
-    birth_date = models.DateField(blank=True)
+    birth_date = models.DateField()
     gender = models.CharField(
         max_length=63, choices=GenderChoices.choices, null=True
     )
@@ -52,14 +52,21 @@ class Post(models.Model):
     class Meta:
         ordering = ["created_at"]
 
+    def __str__(self):
+        return self.content
+
 
 class Like(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
+                             related_name="user_likes")
+    post = models.ForeignKey(Post, on_delete=models.CASCADE,
+                             related_name="post_likes"
+                             )
 
 
 class Comment(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+                             on_delete=models.CASCADE)
     post = models.ForeignKey(Post, on_delete=models.CASCADE,
                              related_name="post_comments")
     text = models.TextField()
@@ -67,4 +74,3 @@ class Comment(models.Model):
 
     class Meta:
         ordering = ["created_at"]
-
